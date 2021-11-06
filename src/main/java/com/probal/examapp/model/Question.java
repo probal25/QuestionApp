@@ -8,13 +8,17 @@ import javax.persistence.*;
 public class Question {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "question_id")
     private Long id;
 
+    @Column(name = "body")
     private String body;
 
+    @Column(name = "label")
     private String label;
 
+    @Column(name = "question_rank")
     private int rank;
 
     public Question(String body, String label, int rank) {

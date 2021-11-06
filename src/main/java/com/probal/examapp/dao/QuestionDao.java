@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface QuestionDao extends JpaRepository<Question, Long> {
 
-    @Query(value = "SELECT * FROM QUESTION_TBL WHERE RANK = ?1 AND LABEL = ?2", nativeQuery = true)
+    @Query(value = "SELECT * FROM QUESTION_TBL WHERE question_rank = ?1 AND LABEL = ?2", nativeQuery = true)
     List<Question> findQuestions(int rank, String label);
 
 }

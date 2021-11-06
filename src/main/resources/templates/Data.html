@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Question List</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div lang="en" th:include="fragments/navigation :: navigation"></div>
+<div class="container container-fluid">
+    <h1>Question Table</h1>
+
+    <h6 th:if = "${#httpServletRequest.requestURI.contains('generate_questions')}">
+        <a th:href="@{/question/export/pdf}">Export to PDF</a>
+    </h6>
+
+    <table id="questionTable" class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Question</th>
+            <th>Type</th>
+            <th>Rank</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="question, rowStat: ${question_list}">
+            <td th:text="${question.body}">body</td>
+            <td th:text="${question.label}">label</td>
+            <td th:text="${question.rank}">rank</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

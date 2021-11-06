@@ -1,0 +1,26 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Success page</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+        .centerDiv {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            /* bring your own prefixes */
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+<div lang="en" th:include="fragments/navigation :: navigation"></div>
+<div class="centerDiv">
+    <h5 th:text="'Total '+ ${noOfRecords} + ' records uploaded !'"/>
+</div>
+</body>
+</html>
