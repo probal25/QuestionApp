@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Question List</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    <script type="text/css">
+        label {
+            display: inline-block;
+            width: 200px;
+            margin: 5px;
+            text-align: left;
+        }
+
+        input[type=text] {
+            display: inline-block;
+            width: 200px;
+        }
+
+        button {
+            padding: 5px;
+            margin: 10px;
+        }
+    </script>
+
+
+</head>
+<body>
+<div lang="en" th:include="fragments/navigation :: navigation"></div>
+<div align="center">
+    <h1>Question Form</h1>
+    <div class="alert alert-danger" th:if="${error_message}" th:text="${error_message}"></div>
+    <div>
+        <form action="#" th:action="@{/question/generate_questions}" method="post" th:object="${question_view}">
+            <div class="col-md-6 form-group">
+                <label>Total no of question</label>
+                <input type="number" class="form-control" th:field="*{noOfQuestions}" required>
+            </div>
+
+            <div class="col-md-6 form-group">
+                <label>Percentage of Easy Questions</label>
+                <input type="number" class="form-control" th:field="*{percentageOfEasyQuestions}" required>
+            </div>
+
+            <div class="col-md-6 form-group">
+                <label>Percentage of Medium Questions</label>
+                <input type="number" class="form-control" th:field="*{percentageOfMediumQuestions}" required>
+            </div>
+
+            <div class="col-md-6 form-group">
+                <label>Percentage of Hard Questions</label>
+                <input type="number" class="form-control" th:field="*{percentageOfHardQuestions}" required>
+            </div>
+            <button type="submit">Generate Question</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.probal.examapp.controller;
 
 import com.lowagie.text.DocumentException;
+import com.probal.examapp.dto.QuestionSetDto;
 import com.probal.examapp.model.Question;
 import com.probal.examapp.service.QuestionService;
 import com.probal.examapp.utill.QuestionPDFExporter;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -53,8 +56,27 @@ public class QuestionController {
     }
 
     @GetMapping("/generate_questions")
-    public String generateQuestionSet(Model model){
-        questionListForPdf = questionService.generateQuestionSet();
+    public String questionSetView(Model model){
+        model.addAttribute("question_view", new QuestionSetDto());
+        return "questionSetForm";
+    }
+
+
+    @PostMapping("/generate_questions")
+    public String generateQuestionSet(Model model,
+                                      @ModelAttribute(value="question_view") QuestionSetDto questionSetDto,
+                                      RedirectAttributes redirectAttributes){
+        int noOfQuestions = questionSetDto.getNoOfQuestions();
+        double percentageOfEasyQuestions = questionSetDto.getPercentageOfEasyQuestions();
+        double percentageOfMediumQuestions = questionSetDto.getPercentageOfMediumQuestions();
+        double percentageOfHardQuestions = questionSetDto.getPercentageOfHardQuestions();
+
+        if ((percentageOfEasyQuestions + percentageOfMediumQuestions +percentageOfHardQuestions) != 100) {
+            redirectAttributes.addFlashAttribute("error_message", "total Percentage must be 100%");
+            return "redirect:/question/generate_questions";
+        }
+
+        questionListForPdf = questionService.generateQuestionSet(noOfQuestions, percentageOfEasyQuestions,percentageOfMediumQuestions);
         model.addAttribute("question_list", questionListForPdf);
         return "Data";
     }

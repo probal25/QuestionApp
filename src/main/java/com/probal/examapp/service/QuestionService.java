@@ -36,25 +36,27 @@ public class QuestionService {
         return questionDao.findQuestions(3,"SE");
     }
 
-    public List<Question> generateQuestionSet() {
+    public List<Question> generateQuestionSet(int noOfQuestions, double percentageOfEasyQuestions, double percentageOfMediumQuestions) {
 
         List<Question> easyQuestions = questionDao.findQuestions(1,"SE");
         List<Question> mediumQuestions = questionDao.findQuestions(2,"SE");
         List<Question> hardQuestions = questionDao.findQuestions(3,"SE");
 
-        List<Question> finalQuestionList = new ArrayList<>();
+        List<Question> finalQuestionList;
+        List<Integer> properties = getQuestionProperties(noOfQuestions,percentageOfEasyQuestions, percentageOfMediumQuestions);
+
 
 
         int sizeOfEasyQuestions = easyQuestions.size();
         int sizeOfMediumQuestions = mediumQuestions.size();
         int sizeOfHardQuestions = hardQuestions.size();
 
-        if ((sizeOfEasyQuestions + sizeOfMediumQuestions + sizeOfHardQuestions) <= 10) return questionDao.findAll();
+        if ((sizeOfEasyQuestions + sizeOfMediumQuestions + sizeOfHardQuestions) <= noOfQuestions) return questionDao.findAll();
 
         finalQuestionList = Stream.of(
-                questionSetGeneration(easyQuestions, 4, sizeOfEasyQuestions),
-                questionSetGeneration(mediumQuestions, 4, sizeOfMediumQuestions),
-                questionSetGeneration(hardQuestions, 2, sizeOfHardQuestions))
+                questionSetGeneration(easyQuestions, properties.get(0), sizeOfEasyQuestions),
+                questionSetGeneration(mediumQuestions, properties.get(1), sizeOfMediumQuestions),
+                questionSetGeneration(hardQuestions, properties.get(2), sizeOfHardQuestions))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         return finalQuestionList;
@@ -84,5 +86,20 @@ public class QuestionService {
             remaining--;
         }
         return result;
+    }
+
+    private List<Integer> getQuestionProperties(int noOfQuestions,
+                                                double percentageOfEasyQuestions,
+                                                double percentageOfMediumQuestions){
+
+        int easy = (int) Math.ceil((noOfQuestions * percentageOfEasyQuestions)/100);
+        int medium = (int) Math.ceil((noOfQuestions * percentageOfMediumQuestions)/100);
+        int hard = noOfQuestions - (easy + medium);
+
+        List<Integer> properties = new ArrayList<>();
+        properties.add(easy);
+        properties.add(medium);
+        properties.add(hard);
+        return properties;
     }
 }
