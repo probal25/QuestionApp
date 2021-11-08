@@ -37,6 +37,11 @@ public class Excel2DbController {
 
     @PostMapping("/uploadFile")
     public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.getOriginalFilename().equals("")){
+            redirectAttributes.addFlashAttribute("error_message",
+                    "File name can not be empty");
+            return "redirect:/file/";
+        }
 
         fileService.uploadFile(file);
 

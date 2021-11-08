@@ -24,6 +24,10 @@ public class QuestionService {
         return questionDao.findAll();
     }
 
+    public List<Question> getAllQuestionByLebel(String lebel) {
+        return questionDao.findByLabel(lebel);
+    }
+
     public List<Question> getEasyQuestions() {
         return questionDao.findQuestions(1,"SE");
     }
@@ -36,11 +40,11 @@ public class QuestionService {
         return questionDao.findQuestions(3,"SE");
     }
 
-    public List<Question> generateQuestionSet(int noOfQuestions, double percentageOfEasyQuestions, double percentageOfMediumQuestions) {
+    public List<Question> generateQuestionSet( String questionType, int noOfQuestions, double percentageOfEasyQuestions, double percentageOfMediumQuestions) {
 
-        List<Question> easyQuestions = questionDao.findQuestions(1,"SE");
-        List<Question> mediumQuestions = questionDao.findQuestions(2,"SE");
-        List<Question> hardQuestions = questionDao.findQuestions(3,"SE");
+        List<Question> easyQuestions = questionDao.findQuestions(1, questionType);
+        List<Question> mediumQuestions = questionDao.findQuestions(2, questionType);
+        List<Question> hardQuestions = questionDao.findQuestions(3, questionType);
 
         List<Question> finalQuestionList;
         List<Integer> properties = getQuestionProperties(noOfQuestions,percentageOfEasyQuestions, percentageOfMediumQuestions);
@@ -101,5 +105,9 @@ public class QuestionService {
         properties.add(medium);
         properties.add(hard);
         return properties;
+    }
+
+    public Question saveQuestion(Question question) {
+        return this.questionDao.save(question);
     }
 }

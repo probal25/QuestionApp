@@ -19,21 +19,25 @@
 <body>
 <div lang="en" th:include="fragments/navigation :: navigation"></div>
 <div class="centerDiv">
-<h2>File Upload & Data Save Page</h2>
 
-    <form th:action="@{/file/uploadFile}" method = "POST" enctype = "multipart/form-data">
-        <br /> <br />
-        Please select a file to upload :
-        <input type = "file" name = "file" value = "Browse File" /> <br /> <br />
-        Press here to upload the file :
-        <input type = "submit" value = "upload" /> <br /> <br />
+    <div>
+        <h2>File Upload & Data Save Page</h2>
+    <div class="alert alert-danger" th:if="${error_message} " th:text="${error_message}"></div>
 
-        <div th:if="${message}">
-            <h2 th:text="${message}"/>
-        </div>
+        <form th:action="@{/file/uploadFile}" method = "POST" enctype = "multipart/form-data">
+            <br /> <br />
+            Please select a file to upload :
+            <input type = "file" name = "file" value = "Browse File" /> <br /> <br />
+            Press here to upload the file :
+            <input type = "submit" value = "upload" /> <br /> <br />
 
-        Do you want to save excel data into database ? <a th:href="@{/file/saveData}"><b>Yes</b></a> &nbsp &nbsp <a th:href="@{/file/}"><b>No</b></a>
-    </form>
+            <div th:if="${message}">
+                <h2 th:text="${message}"/>
+            </div>
+
+            Do you want to save excel data into database ? <a th:href="@{/file/saveData}"><b>Yes</b></a> &nbsp &nbsp <a th:href="@{/file/}"><b>No</b></a>
+        </form>
+    </div>
 </div>
 </body>
 </html>

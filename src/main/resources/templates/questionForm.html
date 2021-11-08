@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Question List</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+        label {
+            display: inline-block;
+            width: 200px;
+            margin: 5px;
+            text-align: left;
+        }
+
+        input[type=text], select {
+            display: inline-block;
+            width: 200px;
+        }
+
+        button {
+            padding: 5px;
+            margin: 10px;
+        }
+    </style>
+
+
+</head>
+<body>
+<div lang="en" th:include="fragments/navigation :: navigation"></div>
+<div align="center">
+    <h1>Question Form</h1>
+    <div class="alert alert-info" th:if="${error_message} " th:text="${error_message}"></div>
+    <div>
+        <form action="#" th:action="@{/question/add_question}" method="post" th:object="${question}">
+            <form class="row g-3">
+            <!--<div class="col-md-6 form-group">-->
+            <div class="col-md-6 form-group">
+
+                <div class="col">
+                    <label>Question</label>
+                    <textarea th:field="*{body}"
+                            required placeholder="Write your Question" cols="25" rows="5"></textarea>
+                </div>
+
+            </div>
+            <!--</div>-->
+            <div class="col-md-6 form-group">
+                <label>Type</label>
+                <select th:field="*{label}">
+                    <option th:value="'SE'" th:text="'Standard Edition'"></option>
+                    <option th:value="'EE'" th:text="'Enterprise Edition'"></option>
+                </select>
+            </div>
+            <div class="col-md-6 form-group">
+                <label>Level</label>
+                <select th:field="*{rank}">
+                    <option th:value="1" th:text="'Easy'"></option>
+                    <option th:value="2" th:text="'Medium'"></option>
+                    <option th:value="3" th:text="'Hard'"></option>
+                </select>
+            </div>
+            <button type="submit">Save Question</button>
+        </form>
+        </form>
+    </div>
+</div>
+</body>
+</html>

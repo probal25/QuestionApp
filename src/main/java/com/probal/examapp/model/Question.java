@@ -12,6 +12,7 @@ public class Question {
     @Column(name = "question_id")
     private Long id;
 
+    @Lob
     @Column(name = "body")
     private String body;
 
