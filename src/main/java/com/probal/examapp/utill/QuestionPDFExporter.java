@@ -2,6 +2,7 @@ package com.probal.examapp.utill;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -9,10 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import com.probal.examapp.model.Question;
+import org.springframework.beans.factory.annotation.Value;
 
 
 
 public class QuestionPDFExporter {
+
+    public final String companyEmailAddress = "jobs@divineit.net";
+
+    public final String testDuration = "2";
+
+    public final String totalMarks = "100";
+
 
     private List<Question> questionList;
 
@@ -20,60 +29,65 @@ public class QuestionPDFExporter {
         this.questionList = questionList;
     }
 
-    private void writeTableHeader(PdfPTable table) {
-        PdfPCell cell = new PdfPCell();
-        cell.setBackgroundColor(Color.BLUE);
-        cell.setPadding(5);
-
-        Font font = FontFactory.getFont(FontFactory.HELVETICA);
-        font.setColor(Color.WHITE);
-
-        cell.setPhrase(new Phrase("Question", font));
-        table.addCell(cell);
-
-        cell.setPhrase(new Phrase("Answer", font));
-        table.addCell(cell);
-
-        cell.setPhrase(new Phrase("Number", font));
-        table.addCell(cell);
-    }
-
-    private void writeTableData(PdfPTable table) {
-        for (Question question : questionList) {
-            table.addCell(question.getBody());
-            table.addCell(String.valueOf(question.getRank()));
-            if (question.getRank() == 1) {
-                table.addCell("5");
-            } else if (question.getRank() == 2) {
-                table.addCell("10");
-            } else {
-                table.addCell("20");
-            }
-
-        }
-    }
-
-    private void writeParagraph(){
-        for (Question question : questionList) {
-
-        }
-    }
-
     public void export(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
+        try {
+            document.open();
+            generateFrontPage(document);
+            generateQuestionContents(document);
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        document.open();
+    }
+
+
+
+    private void generateFrontPage(Document document) {
         Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-        font.setSize(15);
+        font.setSize(9);
         font.setColor(Color.black);
 
-        Paragraph p = new Paragraph("List of Questions", font);
-        p.setAlignment(Paragraph.ALIGN_CENTER);
+        List<Paragraph> frontPageParagraph = Arrays.asList(
+                new Paragraph("Name of the Candidate                  : " , font),
+                new Paragraph("Address of the candidate              : " , font),
+                new Paragraph("Email Address of the candidate   : ", font),
+                new Paragraph("Cell no of the candidate                : ", font)
+        );
 
-        document.add(p);
-        document.add(Chunk.NEWLINE);
+        document.add(addImage());
+        List<Paragraph> paragraphs = generateUpperPartFrontPage(font);
 
+        int countP = 0;
+        for (Paragraph paragraph: paragraphs) {
+            paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+
+            document.add(paragraph);
+            if (countP == 0) {
+                addNewLinesToDocument(document, 2);
+            }
+            countP++;
+        }
+        addNewLinesToDocument(document, 7);
+        for (Paragraph paragraph : frontPageParagraph) {
+//            paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+            document.add(paragraph);
+            addNewLinesToDocument(document, 1);
+        }
+
+        Paragraph footerContentOfPage = new Paragraph("N.B: \n 1. Please switch off your Mobile Phone & hand over to the concerned Person" , font);
+        footerContentOfPage.setSpacingBefore(200f);
+        document.add(footerContentOfPage);
+
+        Paragraph footerContentOfPage2 = new Paragraph("2. You may use designered answering space for both answers and drafts. But please separate them clearly." , font);
+        document.add(footerContentOfPage2);
+
+        document.newPage();
+    }
+
+    private void generateQuestionContents(Document document) {
         Font fontP = FontFactory.getFont(FontFactory.COURIER);
         fontP.setSize(10);
         fontP.setColor(Color.BLACK);
@@ -82,42 +96,41 @@ public class QuestionPDFExporter {
 
             Paragraph paragraph = new Paragraph(count +") " + question.getBody(), fontP);
             document.add(paragraph);
-
-            if (question.getRank() == 1) {
-                for (int i = 0; i< 4; i++) {
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                }
-            } else if (question.getRank() == 2){
-                for (int i = 0; i< 4; i++) {
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                }
-            } else {
-                for (int i = 0; i < 4; i++) {
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                    document.add(Chunk.NEWLINE);
-                }
-            }
+            addNewLinesToDocument(document, question.getLineOfAnswer());
             count += 1;
         }
+    }
 
+    private List<Paragraph> generateUpperPartFrontPage(Font font) {
+        List<Paragraph> upperPartContents = Arrays.asList(
+                new Paragraph("Preliminary Test", font),
+                new Paragraph("Email: " + companyEmailAddress, font),
+                new Paragraph("Duration of the test: " + testDuration + " hrs.", font),
+                new Paragraph("Full Marks: " + totalMarks, font)
+        );
+        return upperPartContents;
+    }
 
-        /*PdfPTable table = new PdfPTable(3);
-        table.setWidthPercentage(100f);
-        table.setWidths(new float[] {5f, 3.0f, 3.0f});
-        table.setSpacingBefore(10);
+    private Image addImage() {
+        Image logo = null;
+        try {
+            logo = Image.getInstance("C:/Projects/practice_projects/examapp/src/main/resources/logo.png");
+            logo.setAlignment(Image.MIDDLE);
+            logo.scaleAbsoluteHeight(20);
+            logo.scaleAbsoluteWidth(20);
+            logo.scalePercent(100);
+            return logo;
+        } catch (IOException e) {
 
-        writeTableHeader(table);
-        writeTableData(table);
+            e.printStackTrace();
+            return null;
+        }
 
-        document.add(table);*/
+    }
 
-        document.close();
+    private void addNewLinesToDocument(Document document, int numberOfLines){
+        for (int i = 0; i < numberOfLines; i++) {
+            document.add(Chunk.NEWLINE);
+        }
     }
 }
