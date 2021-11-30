@@ -61,7 +61,7 @@ public class QuestionController {
     @PostMapping("/add_question")
     public String addQuestion(Model model,
                               @ModelAttribute(value = "question") Question question,
-                              RedirectAttributes redirectAttributes){
+                              RedirectAttributes redirectAttributes) {
         Question question1 = this.questionService.saveQuestion(question);
         if (question1 != null) {
             redirectAttributes.addFlashAttribute("error_message", "Question Added Successfully. . . ");

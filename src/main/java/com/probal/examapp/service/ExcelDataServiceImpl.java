@@ -82,6 +82,7 @@ public class ExcelDataServiceImpl implements IExcelDataService {
             question.setLabel(excelData.get(i+1));
             question.setRank(Integer.parseInt(excelData.get(i+2)));
             question.setLineOfAnswer(Integer.parseInt(excelData.get(i+3)));
+            question.setAnswer(excelData.get(i+4));
 
             questions.add(question);
             i = i + (noOfColumns);

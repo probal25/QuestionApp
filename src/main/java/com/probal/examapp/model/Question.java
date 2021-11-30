@@ -25,13 +25,18 @@ public class Question {
     @Column(name = "line_of_answer")
     private int lineOfAnswer;
 
+    @Lob
+    @Column(name = "answer")
+    private String answer;
 
 
-    public Question(String body, String label, int rank, int lineOfAnswer) {
+
+    public Question(String body, String label, int rank, int lineOfAnswer, String answer) {
         this.body = body;
         this.label = label;
         this.rank = rank;
         this.lineOfAnswer = lineOfAnswer;
+        this.answer = answer;
     }
 
     public Question() {
@@ -75,5 +80,13 @@ public class Question {
 
     public void setLineOfAnswer(int lineOfAnswer) {
         this.lineOfAnswer = lineOfAnswer;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }
