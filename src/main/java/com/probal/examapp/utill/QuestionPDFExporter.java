@@ -83,7 +83,7 @@ public class QuestionPDFExporter {
         footerContentOfPage.setSpacingBefore(190f);
         document.add(footerContentOfPage);
 
-        Paragraph footerContentOfPage2 = new Paragraph("2. You may use designered answering space for both answers and drafts. But please separate them clearly." , font);
+        Paragraph footerContentOfPage2 = new Paragraph("2. You may use designated answering space for both answers and drafts. But please separate them clearly." , font);
         document.add(footerContentOfPage2);
 
         document.newPage();
