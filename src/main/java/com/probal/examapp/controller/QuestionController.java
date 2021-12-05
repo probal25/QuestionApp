@@ -3,15 +3,14 @@ package com.probal.examapp.controller;
 import com.lowagie.text.DocumentException;
 import com.probal.examapp.dto.QuestionSetDto;
 import com.probal.examapp.model.Question;
+import com.probal.examapp.model.QuestionSet;
 import com.probal.examapp.service.QuestionService;
+import com.probal.examapp.service.QuestionSetService;
 import com.probal.examapp.utill.QuestionPDFExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +30,9 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    QuestionSetService questionSetService;
 
     List<Question> questionListForPdf;
 
@@ -53,7 +55,7 @@ public class QuestionController {
     }
 
     @GetMapping("/add_question")
-    public String addQuestionView(Model model){
+    public String addQuestionView(Model model) {
         model.addAttribute("question", new Question());
         return "questionForm";
     }
@@ -150,11 +152,42 @@ public class QuestionController {
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=Question_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
+        String questionSetCode = questionSetService.generateQuestionSet(questionListForPdf);
 
-        QuestionPDFExporter questionPDFExporter = new QuestionPDFExporter(questionListForPdf);
+        QuestionPDFExporter questionPDFExporter = new QuestionPDFExporter(questionListForPdf, questionSetCode);
         questionPDFExporter.export(response);
 
     }
 
+    @GetMapping("/all_question_set")
+    public String getAllQuestionSet(Model model) {
+        List<QuestionSet> questionSets = questionSetService.getAllQuestionSet();
+        model.addAttribute("question_sets", questionSets);
+        return "question_set_view";
+    }
+
+    @GetMapping("/get_qustions_by_qset_id/{id}")
+    public String getQuestionAnswerList(@PathVariable("id") Long id, Model model) throws Exception {
+        List<Question> questionList = questionSetService.getQuestionAnswerList(id);
+        model.addAttribute("question_list", questionList);
+        return "Data";
+    }
+
+
+    @GetMapping("/custom_questions")
+    public void generateCustomQuestions(HttpServletResponse response) throws DocumentException, IOException {
+        List<Question> questionList = questionService.getCustomQuestions();
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=Question_" + currentDateTime + ".pdf";
+        response.setHeader(headerKey, headerValue);
+        String questionSetCode = questionSetService.generateQuestionSet(questionList);
+
+        QuestionPDFExporter questionPDFExporter = new QuestionPDFExporter(questionList, questionSetCode);
+        questionPDFExporter.export(response);
+    }
 
 }

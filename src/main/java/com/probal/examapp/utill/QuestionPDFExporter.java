@@ -24,9 +24,11 @@ public class QuestionPDFExporter {
 
 
     private List<Question> questionList;
+    private String questionSetCode;
 
-    public QuestionPDFExporter(List<Question> questionList){
+    public QuestionPDFExporter(List<Question> questionList, String questionSetCode){
         this.questionList = questionList;
+        this.questionSetCode = questionSetCode;
     }
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
@@ -78,7 +80,7 @@ public class QuestionPDFExporter {
         }
 
         Paragraph footerContentOfPage = new Paragraph("N.B: \n 1. Please switch off your Mobile Phone & hand over to the concerned Person" , font);
-        footerContentOfPage.setSpacingBefore(200f);
+        footerContentOfPage.setSpacingBefore(190f);
         document.add(footerContentOfPage);
 
         Paragraph footerContentOfPage2 = new Paragraph("2. You may use designered answering space for both answers and drafts. But please separate them clearly." , font);
@@ -88,7 +90,7 @@ public class QuestionPDFExporter {
     }
 
     private void generateQuestionContents(Document document) {
-        Font fontP = FontFactory.getFont(FontFactory.COURIER);
+        Font fontP = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         fontP.setSize(10);
         fontP.setColor(Color.BLACK);
         int count = 1;
@@ -96,7 +98,7 @@ public class QuestionPDFExporter {
 
             Paragraph paragraph = new Paragraph(count +") " + question.getBody(), fontP);
             document.add(paragraph);
-            addNewLinesToDocument(document, question.getLineOfAnswer());
+            addNewLinesToDocument(document, question.getLineOfAnswer() * 2);
             count += 1;
         }
     }
@@ -105,8 +107,9 @@ public class QuestionPDFExporter {
         List<Paragraph> upperPartContents = Arrays.asList(
                 new Paragraph("Preliminary Test", font),
                 new Paragraph("Email: " + companyEmailAddress, font),
-                new Paragraph("Duration of the test: " + testDuration + " hrs.", font),
-                new Paragraph("Full Marks: " + totalMarks, font)
+                new Paragraph("Duration of the test: " , font),
+                new Paragraph("Full Marks: " , font),
+                new Paragraph("Question Set: " + questionSetCode, font)
         );
         return upperPartContents;
     }

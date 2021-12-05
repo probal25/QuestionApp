@@ -29,14 +29,18 @@ public class Question {
     @Column(name = "answer")
     private String answer;
 
+    @Column(name = "selected")
+    private int selected;
 
 
-    public Question(String body, String label, int rank, int lineOfAnswer, String answer) {
+
+    public Question(String body, String label, int rank, int lineOfAnswer, String answer, int selected) {
         this.body = body;
         this.label = label;
         this.rank = rank;
         this.lineOfAnswer = lineOfAnswer;
         this.answer = answer;
+        this.selected = selected;
     }
 
     public Question() {
@@ -88,5 +92,13 @@ public class Question {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public int getSelected() {
+        return selected;
+    }
+
+    public void setSelected(int selected) {
+        this.selected = selected;
     }
 }

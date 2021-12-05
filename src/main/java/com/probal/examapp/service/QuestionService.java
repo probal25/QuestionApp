@@ -110,4 +110,9 @@ public class QuestionService {
     public Question saveQuestion(Question question) {
         return this.questionDao.save(question);
     }
+
+
+    public List<Question> getCustomQuestions() {
+        return questionDao.getCustomQuestions();
+    }
 }

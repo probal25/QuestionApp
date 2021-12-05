@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuestionDao extends JpaRepository<Question, Long> {
@@ -15,4 +16,9 @@ public interface QuestionDao extends JpaRepository<Question, Long> {
 
     List<Question> findByLabel(String label);
 
+    Optional<Question> findById(Long id);
+
+
+    @Query(value = "SELECT * FROM question_tbl WHERE selected = 1", nativeQuery = true)
+    List<Question> getCustomQuestions();
 }
