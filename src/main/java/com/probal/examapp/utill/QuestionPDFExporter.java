@@ -96,11 +96,22 @@ public class QuestionPDFExporter {
         int count = 1;
         for (Question question : questionList) {
 
-            Paragraph paragraph = new Paragraph(count +") " + question.getBody(), fontP);
+            Paragraph paragraph1 = new Paragraph("Question " + count + " : " + generateTabs() +" " + question.getMarks(), fontP);
+            document.add(paragraph1);
+            Paragraph paragraph = new Paragraph(question.getBody(), fontP);
             document.add(paragraph);
+
             addNewLinesToDocument(document, question.getLineOfAnswer() * 2);
             count += 1;
         }
+    }
+
+    private String generateTabs() {
+        String tabs = "";
+        for (int i = 0; i < 160 ; i++) {
+            tabs += "\t";
+        }
+        return tabs;
     }
 
     private List<Paragraph> generateUpperPartFrontPage(Font font) {
