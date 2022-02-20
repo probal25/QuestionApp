@@ -1,0 +1,1 @@
+INSERT INTO question_db.hibernate_sequence (next_val) VALUES (80);
