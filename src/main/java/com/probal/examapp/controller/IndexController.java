@@ -10,4 +10,9 @@ public class IndexController {
     public String redirect() {
         return "redirect:/question/all_questions";
     }
+
+    @RequestMapping("/error_view")
+    public String error_view() {
+        return "error";
+    }
 }

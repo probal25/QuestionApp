@@ -30,6 +30,8 @@
             <th>Question</th>
             <th>Type</th>
             <th>Rank</th>
+            <th>Marks</th>
+            <th>Selected</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -38,7 +40,8 @@
             <td th:text="${question.body}">body</td>
             <td th:text="${question.label}">label</td>
             <td th:text="${question.rank}">rank</td>
-            <!--<td><button id = "answerButtonId" onclick="sayHello(this);" th:data-answer="${question.answer}" class="btn btn-info">Show</button></td>-->
+            <td th:text="${question.marks}">rank</td>
+            <td th:text="${question.selected}">rank</td>
             <td>
                 <button class="btn btn-info" th:attr="data-target='#' + ${question.id}"
                         data-toggle="modal">Show Answer

@@ -38,7 +38,8 @@ public class QuestionController {
 
     @GetMapping("/all_questions")
     public String getAllQuestions(Model model) {
-        model.addAttribute("question_list", questionService.getAllQuestions());
+        List<Question> finalQuestionList = questionService.getAllQuestions().stream().filter(question -> (question.getSelected() == 1)).collect(Collectors.toList());
+        model.addAttribute("question_list", finalQuestionList );
         return "Data";
     }
 
